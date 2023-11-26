@@ -1,28 +1,35 @@
-def convert_to_24_hour(hour, minute, period):
-    # Check if hour is in the range of 1 to 12
-    if not (1 <= hour <= 12):
-        raise ValueError("Hour must be in the range of 1 to 12")
+# Function to return the highest value of a consonant
+def solve(s):
+    # Define vowels and assign values to consonants
+    vowels = "aeiou"
+    consonant_values = {char: i + 1 for i, char in enumerate("abcdefghijklmnopqrstuvwxyz")}
+    
+    # Function to calculate the value of a consonant substring
+    def get_consonant_value(substring):
+        return sum(consonant_values[char] for char in substring)
 
-    # Check if minute is in the range of 0 to 59
-    if not (0 <= minute <= 59):
-        raise ValueError("Minute must be in the range of 0 to 59")
+    # Initialize variables
+    max_consonant_value = 0
+    current_consonant = ""
 
-    if period.lower() == "pm" and hour != 12:
-        hour += 12
-    elif period.lower() == "am" and hour == 12:
-        hour = 0
+    # Iterate through the characters in the input string
+    for char in s:
+        # Check if the character is a vowel
+        if char not in vowels:
+            current_consonant += char  # If it's a consonant, add it to the current consonant substring
+        else:
+            # If it's a vowel, calculate the value of the current consonant substring
+            if current_consonant:
+                value = get_consonant_value(current_consonant)
+                max_consonant_value = max(max_consonant_value, value)  # Update the maximum consonant value if needed
+                current_consonant = ""  # Reset the current consonant substring
 
-    # Format the hour and minute as two-digit strings
-    formatted_hour = f"{hour:02d}"
-    formatted_minute = f"{minute:02d}"
+    # Check the last substring if it ends with a consonant
+    if current_consonant:
+        value = get_consonant_value(current_consonant)
+        max_consonant_value = max(max_consonant_value, value)  # Update the maximum consonant value if needed
 
-    # Combine the formatted hour and minute
-    result = f"{formatted_hour}{formatted_minute}"
+    return max_consonant_value
 
-    return result
+print(solve("zodiacs"))    
 
-# Test cases
-print(convert_to_24_hour(8, 30, "am"))  # Output: "0830"
-print(convert_to_24_hour(1, 45, "pm"))  # Output: "1345"
-print(convert_to_24_hour(12, 0, "am"))  # Output: "0000"
-print(convert_to_24_hour(12, 30, "pm")) # Output: "1230"
